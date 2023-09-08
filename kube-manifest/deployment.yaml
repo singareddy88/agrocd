@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: todo-app-container
-        image: joelplush/todo-app:v1
+        image: joelplush/todo-app:v2
         ports:
         - containerPort: 80

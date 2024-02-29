@@ -1,23 +1,24 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+<code>apiVersion: argoproj.io/v1alpha1 
+kind: ApplicationSet
 metadata:
-  name: todo-app-argo
-  namespace: argocd
+  name: webserver
 spec:
-  project: default
-
-  source:
-    repoURL: https://github.com/singareddy88/agrocd.git
-    targetRevision: HEAD
-    path: kube-manifest
-  destination: 
-    server: https://kubernetes.default.svc
-    namespace: todo-app
-
-  syncPolicy:
-    syncOptions:
-    - CreateNamespace=true
-
-    automated:
-      selfHeal: true
-      prune: true
+  generators:
+  - clusters: {}
+  template:
+    metadata:
+      name: '{{name}}-webserver'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/singareddy88/agrocd.git
+        targetRevision: H
+        path: "kubernetes/resources/webserver/{{name}}"
+      destination:
+        name: "{{server}}"
+        namespace: webserver-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:- CreateNamespace=true</code>

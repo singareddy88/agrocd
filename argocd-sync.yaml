@@ -1,24 +1,27 @@
-<code>apiVersion: argoproj.io/v1alpha1 
-kind: ApplicationSet
+<code>apiVersion: argoproj.io/v1alpha1 kind: ApplicationSet
 metadata:
-  name: webserver
+  name: guestbook
 spec:
   generators:
-  - clusters: {}
-  template:
+  - list: 
+      # The template below uses these parameters
+      elements: 
+      - cluster: development
+        url: https://1.2.3.4
+      - cluster: production
+        url: https://5.6.7.8
+      - cluster: staging
+        url: https://9.9.1.1
+  template: 
+    # inserts cluster and url values from parameters defined above
     metadata:
-      name: '{{name}}-webserver'
+      name: '{{cluster}}-guestbook
     spec:
       project: default
       source:
         repoURL: https://github.com/singareddy88/agrocd.git
-        targetRevision: H
-        path: "kubernetes/resources/webserver/{{name}}"
+        targetRevision: multiplecluster
+        path: kube-manifest
       destination:
-        name: "{{server}}"
-        namespace: webserver-system
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:- CreateNamespace=true</code>
+        server: https://kubernetes.default.svc
+        namespace: argocd
